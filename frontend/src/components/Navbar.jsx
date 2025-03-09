@@ -25,7 +25,7 @@ const Navbar = () => {
                     <NavLink to='/' className='hover:text-yellow-300 flex items-center gap-1'>
                         Products <img className='w-3 h-3' src={assets.down_arrow} alt="Down Arrow" />
                     </NavLink>
-                    <NavLink to='/' className='hover:text-yellow-300'>Stores</NavLink>
+                    <NavLink to='/near-stores' className='hover:text-yellow-300'>Stores</NavLink>
                 </ul>
 
                 {/* Right-side icons */}
