@@ -6,6 +6,7 @@ import Cart from './pages/Cart'
 import Login from './pages/Login'
 import Footer from './components/Footer'
 import AccessAccount from './pages/Accessaccount'
+import NearByStores from './pages/NearByStores'
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
         <Route path='/cart' element={<Cart/>}/>
         <Route path='/access-account' element={<AccessAccount/>}/>
         <Route path='/login' element={<Login/>}/>
+        <Route path='/near-stores' element={<NearByStores/>} />
       </Routes>
       <Footer/>
     </div>
