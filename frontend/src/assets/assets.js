@@ -49,7 +49,7 @@ export const assets ={
     buyer,
     google_icon,
     github,
-    quickview,wishlist
+    quickview,wishlist,p_img1,p_img2_1,p_img2_2,p_img2_3,p_img2_4
 }
 
 export const products = [
