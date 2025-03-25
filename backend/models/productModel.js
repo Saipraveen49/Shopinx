@@ -8,7 +8,7 @@ const productSchema  = mongoose.Schema({
     sizes: {type: Array, required: true},
     stock: { type: Number, required: true, default: 0 }, // Track stock availability
     images: [{ type: String }], // Array of image URLs
-    vendorId: { type: mongoose.Schema.Types.ObjectId, ref: "Vendor", required: true }, // Reference to Vendor
+    vendorId: { type: String, required: true }, // Reference to Vendor
     createdAt: { type: Date, default: Date.now }
 });
 

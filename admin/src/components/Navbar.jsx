@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { assets } from '../assets/assets';
 import { Link, NavLink } from 'react-router-dom';
 
-const Navbar = () => {
+const Navbar = ({ setToken }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
@@ -39,7 +39,7 @@ const Navbar = () => {
               </NavLink>
               
               <NavLink 
-                to="/products" 
+                to="/listProducts" 
                 className={({isActive}) => 
                   isActive ? "text-indigo-600 px-3 py-2 rounded-md text-sm font-medium" 
                   : "text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium"
@@ -49,7 +49,7 @@ const Navbar = () => {
               </NavLink>
               
               <NavLink 
-                to="/listProducts" 
+                to="/orders" 
                 className={({isActive}) => 
                   isActive ? "text-indigo-600 px-3 py-2 rounded-md text-sm font-medium" 
                   : "text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium"
@@ -71,8 +71,8 @@ const Navbar = () => {
             
             {/* Auth/Profile Section */}
             <div className="flex items-center ml-4 space-x-3">
-              <NavLink 
-                to="/login" 
+             {/* <NavLink 
+                to="/adminlogin" 
                 className={({isActive}) => 
                   isActive ? "text-indigo-600 px-3 py-2 rounded-md text-sm font-medium" 
                   : "text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium"
@@ -87,7 +87,7 @@ const Navbar = () => {
               >
                 Sign Up
               </NavLink>
-              
+              */}
               {/* Profile Dropdown */}
               <div className="relative ml-3">
                 <button 
@@ -104,7 +104,7 @@ const Navbar = () => {
                     <NavLink to="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your Profile</NavLink>
                     <NavLink to="/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Store Settings</NavLink>
                     <NavLink to="/update-details" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Update Details</NavLink>
-                    <NavLink to="/logout" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</NavLink>
+                    <p onClick={()=>setToken("")} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</p>
                   </div>
                 )}
               </div>
@@ -195,13 +195,13 @@ const Navbar = () => {
               <NavLink to="/profile" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Your Profile</NavLink>
               <NavLink to="/settings" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Store Settings</NavLink>
               <NavLink to="/update-details" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Update Details</NavLink>
-              <NavLink to="/logout" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Sign out</NavLink>
+              <p onClick={()=>setToken("")} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Sign out</p>
             </div>
           </div>
-          <div className="px-5 py-4 border-t border-gray-200 flex flex-col space-y-3">
+          {/*<div className="px-5 py-4 border-t border-gray-200 flex flex-col space-y-3">
             <NavLink to="/login" className="block text-center w-full px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">Login</NavLink>
             <NavLink to="/signup" className="block text-center w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-indigo-700 bg-white hover:bg-gray-50">Sign Up</NavLink>
-          </div>
+          </div>*/}
         </div>
       )}
     </nav>

@@ -5,12 +5,18 @@ import Navbar from './components/Navbar'
 import AddProduct from './pages/AddProduct'
 import Sidebar from './components/Sidebar'
 import ProductsListPage from './pages/ProductListPage'
+import { useState } from 'react'
+import Login from './pages/Login'
 const App = () => {
+  const [token,setToken]=useState("dvdfd");
   return (
-    <div>
-      <Navbar/>
+    <>
+    {token === ""? <Login />
+    :
+      <div>
+      <Navbar setToken={setToken}/>
       <div className='flex w-full'>
-          <Sidebar/>
+          <Sidebar setToken={setToken}/>
           <div className='w-[70%] mx-auto ml-[max(5vw,25px)] my-8 text-gray-600 text-base'>
             <Routes>
             <Route path='/' element={<Home />}/>
@@ -20,6 +26,9 @@ const App = () => {
           </div>
         </div>
     </div>
+    }
+    </>
+    
   )
 }
 
