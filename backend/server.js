@@ -4,7 +4,7 @@ import dotenv from "dotenv"
 import userRouter from "./routes/userRouter.js";
 import cartRouter from "./routes/cartRouter.js";
 import productRouter from "./routes/productRoute.js";
-
+import connectCloudinary from './config/cloudinary.js'
 dotenv.config();
 
 const port = process.env.PORT || 3000
@@ -12,6 +12,7 @@ const port = process.env.PORT || 3000
 const app=express();
 app.use(express.json())
 connectDb();
+connectCloudinary();
 app.get('/',(req,res)=>{
     res.send("Welcome to the server");
 })
