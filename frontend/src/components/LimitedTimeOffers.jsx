@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { assets } from "../assets/assets";
 
 const offers = [
-  { name: "Smartphones", discount: "30% Off", image: "https://source.unsplash.com/400x400/?smartphone" },
-  { name: "Watches", discount: "40% Off", image: "https://source.unsplash.com/400x400/?watch" },
-  { name: "Shoes", discount: "50% Off", image: "https://source.unsplash.com/400x400/?shoes" },
+  { name: "Smartphones", discount: "30% Off", image: assets.mobiles},
+  { name: "Watches", discount: "40% Off", image: assets.watches },
+  { name: "Shoes", discount: "50% Off", image: assets.shoes },
 ];
 
 const LimitedTimeOffers = () => {
@@ -25,7 +26,7 @@ const LimitedTimeOffers = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-12">
-      <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-6">
+      <h2 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-extrabold text-center text-gray-900 mb-6">
         ⚡ Limited Time Offers ⚡
       </h2>
       <p className="text-center text-red-500 text-lg font-semibold mb-8">⏳ Time Left: {formatTime(timeLeft)}</p>

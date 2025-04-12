@@ -6,35 +6,18 @@ const addProduct = async (req, res) => {
     try {
         const { name, description, price, category, sizes, stock } = req.body;
 
-        // Ensure req.files exists before accessing images
-        if (!req.files || Object.keys(req.files).length === 0) {
-            return res.status(400).json({ success: false, message: "No images uploaded" });
-        }
+        const image1=req.files.image1 && req.files.image1[0];
+        const image2=req.files.image2 && req.files.image2[0];
+        const image3=req.files.image3 && req.files.image3[0];
+        const image4=req.files.image4 && req.files.image4[0];
 
-        // Extract images safely
-        const imageFiles = ['image1', 'image2', 'image3', 'image4']
-            .map((key) => req.files[key] && req.files[key][0])
-            .filter((item) => item !== undefined);  // Remove undefined entries
-
-        // Upload images to Cloudinary
-        let imageUrls = await Promise.all(
-            imageFiles.map(async (file) => {
-                try {
-                    let result = await cloudinary.uploader.upload(file.path, { resource_type: "image" });
-                    return result.secure_url;
-                } catch (uploadError) {
-                    console.error("Cloudinary Upload Error:", uploadError);
-                    return null;  // Prevent breaking the Promise.all
-                }
-            })
-        );
-
-        imageUrls = imageUrls.filter(url => url !== null); // Remove failed uploads
-
-        // Save product only if images uploaded successfully
-        if (imageUrls.length === 0) {
-            return res.status(500).json({ success: false, message: "Image upload failed" });
-        }
+        const images=[image1,image2,image3,image4].filter((item)=>item!==undefined);
+        let imageUrl=await Promise.all(
+            images.map(async (item)=>{
+                let result=await cloudinary.uploader.upload(item.path,{resource_type:"image"});
+                return result.secure_url;
+             })
+        )
 
         const newProduct = new productModel({
             name,
@@ -43,7 +26,7 @@ const addProduct = async (req, res) => {
             category,
             sizes,
             stock,
-            images: imageUrls,
+            images: imageUrl,
             vendorId:req.vendorId
         });
 
@@ -75,15 +58,36 @@ const listProducts = async(req,res)=>{
         res.send({success:false,message:error.message});
     }
 }
-const singleProduct = async(req,res)=>{
+const vendorListProducts = async (req, res) => {
     try {
-        const productId=req.body.id;
-        const product = await productModel.findById(productId)
-        res.json({success:true,product})
+      const vendorId = req.vendorId;
+    
+      if (!vendorId) {
+        return res.status(400).json({ success: false, message: 'Vendor ID not found in request' });
+      }
+      console.log(vendorId)
+      const products = await productModel.find({ vendorId });
+      res.json({ success: true, products });
     } catch (error) {
-        console.log(error);
-        res.send({success:false,message:error.message});
+      console.error('Error fetching vendor products:', error);
+      res.status(500).json({ success: false, message: error.message });
     }
-}
+  };
 
-export {addProduct,removeProduct,listProducts,singleProduct};
+const singleProduct = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const product = await productModel.findById(id);
+  
+      if (!product) {
+        return res.status(404).json({ success: false, message: "Product not found" });
+      }
+  
+      res.json({ success: true, product });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ success: false, message: error.message });
+    }
+  };
+
+export {addProduct,removeProduct,listProducts,singleProduct,vendorListProducts};

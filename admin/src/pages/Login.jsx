@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-
-const Login = () => {
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+const Login = ({ token, setToken }) => {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [showLogin, setShowLogin] = useState(false);
   const [formData, setFormData] = useState({
@@ -43,15 +46,47 @@ const Login = () => {
     });
   };
 
+
   const toggleLoginForm = () => {
     setShowLogin(!showLogin);
   };
 
-  const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    // Handle login submission here
-    console.log('Login submitted:', loginData);
+    if (showLogin) {
+      try {
+        const response = await axios.post('http://localhost:3000/api/user/adminLogin', loginData);
+        if (response.data.success) {
+          localStorage.setItem("token", response.data.token);
+          setToken(response.data.token);
+          toast.success("Login successful!");
+          navigate('/');
+        } else {
+          toast.error(response.data.message);
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        toast.error(error.response?.data?.message || "Login failed");
+      }
+    } else {
+      try {
+        console.log(formData)
+        const response = await axios.post('http://localhost:3000/api/user/adminRegister', formData);
+        
+        console.log(response.data);
+        if (response.data.success) {
+          toast.success("Registration successful!");
+          setShowLogin(true); // Switch to login view after successful signup
+        } else {
+          toast.error(response.data.message || "Registration failed");
+        }
+      } catch (error) {
+        console.error("Registration error:", error);
+        toast.error(error.response?.data?.message || "Registration failed");
+      }
+    }
   };
+  
 
   // If showing login form
   if (showLogin) {
@@ -383,6 +418,7 @@ const Login = () => {
                   <button
                     type="submit"
                     className="w-1/2 ml-2 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                    onClick={handleLoginSubmit}
                   >
                     Register
                   </button>

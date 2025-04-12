@@ -9,16 +9,19 @@ const createToken = (id)=>{
 const loginUser = async(req,res)=>{
     try {
         const {email,password}=req.body;
+        
         const user = await userModel.findOne({email});
         if(!user){
             res.send({success:false,message:"User Not Exists"});
         }
+        console.log("User object:", user);
         const match=await bcrypt.compare(password,user.password);
         if(!match){
             res.send({success:false,message:"Password is Incorrect"});
         }
         const token=createToken(user._id);
-        res.send({success:true,token})
+        
+        res.send({success:true,token,name: user.name})
 
     } catch (error) {
         console.log(error);
@@ -76,6 +79,7 @@ const adminRegister = async(req,res)=>{
     try {
         const { name,email,password,companyName,phone,address,city,village }=req.body;
         const exist = await vendorModel.findOne({email});
+        console.log("register");
         if (exist) {
             res.send({ success: false, message: "Vendor Already Exists" });
         }
@@ -106,4 +110,6 @@ const adminRegister = async(req,res)=>{
         res.send({success:false,message:error.message})
     }
 }
+
+
 export {registerUser,loginUser,adminLogin,adminRegister}
