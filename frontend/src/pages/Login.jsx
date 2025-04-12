@@ -1,20 +1,70 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom"; // Import Link if using routing
+import React, { useState, useContext } from "react";
 import { assets } from "../assets/assets";
+import axios from "axios";
+import { ShopContext } from "../Context/ShopContext";
+import { toast } from "react-toastify";
 
 const Login = () => {
+  const { backendUrl, token, setToken,navigate,setUname } = useContext(ShopContext);
   const [lstate, setLstate] = useState("Login");
-  const [name, setName] = useState(""); // Added name state
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState(""); // Added confirmPassword state
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (lstate === "Login") {
+      try {
+        const result = await axios.post(`${backendUrl}/api/user/login`, { email, password });
+        console.log(result.data);
+        if (result.data.success) {
+          localStorage.setItem("token", result.data.token);
+          setToken(result.data.token);
+          setUname(result.data.name);
+          toast.success("Login successful!");
+          navigate('/');
+        } else {
+          toast.error(result.data.message);
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        toast.error(error.response?.data?.message || "Login failed");
+      }
+    } else {
+      // SignUp
+      if (password !== confirmPassword) {
+        toast.error("Passwords do not match!");
+        return;
+      }
+
+      try {
+        const result = await axios.post(`${backendUrl}/api/user/register`, {
+          name,
+          email,
+          password,
+          confirmPassword,
+        });
+        if (result.data.success) {
+          localStorage.setItem("token", result.data.token);
+          setToken(result.data.token);
+          toast.success("Registration successful!");
+          setLstate("Login");
+        } else {
+          toast.error(result.data.message);
+        }
+      } catch (error) {
+        console.error("Registration error:", error);
+        toast.error(error.response?.data?.message || "Registration failed");
+      }
+    }
+  };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
-        <h2 className="text-3xl font-semibold text-center text-gray-900 mb-6">
-          {lstate}
-        </h2>
+        <h2 className="text-3xl font-semibold text-center text-gray-900 mb-6">{lstate}</h2>
 
         {/* Social login icons */}
         <div className="flex justify-center gap-6 mb-6">
@@ -25,8 +75,8 @@ const Login = () => {
         <hr className="mb-5" />
 
         {/* Form */}
-        <form>
-          {/* Name input (Only for Sign Up) */}
+        <form onSubmit={handleSubmit}>
+          {/* Name input (SignUp only) */}
           {lstate === "SignUp" && (
             <div className="mb-6">
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
@@ -38,7 +88,7 @@ const Login = () => {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Enter your name"
                 value={name}
-                onChange={(e) => setName(e.target.value)} // Handle name input change
+                onChange={(e) => setName(e.target.value)}
               />
             </div>
           )}
@@ -54,7 +104,7 @@ const Login = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter your email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)} // Handle email input change
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
@@ -69,11 +119,11 @@ const Login = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter your password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)} // Handle password input change
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
-          {/* Confirm Password input (Only for Sign Up) */}
+          {/* Confirm Password (SignUp only) */}
           {lstate === "SignUp" && (
             <div className="mb-6">
               <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700 mb-2">
@@ -85,7 +135,7 @@ const Login = () => {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Confirm your password"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)} // Handle confirm password input change
+                onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </div>
           )}
@@ -99,7 +149,7 @@ const Login = () => {
           </button>
         </form>
 
-        {/* Toggle between Login and Signup */}
+        {/* Toggle link */}
         <div className="mt-4 text-center">
           <p className="text-sm text-gray-600">
             {lstate === "Login" ? "Don't have an account?" : "Already have an account?"}{" "}

@@ -1,43 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { assets } from '../assets/assets';
+import axios from 'axios'; // ✅ Import Axios
 
-const mockProducts = [
-  {
-    _id: '1',
-    name: 'Classic T-Shirt',
-    description: 'Comfortable cotton t-shirt',
-    price: 19.99,
-    category: 'Clothing',
-    sizes: ['S', 'M', 'L', 'XL'],
-    stock: 25,
-    images: [
-        assets.p_img2_1,
-      'https://via.placeholder.com/150/FF0000',
-      'https://via.placeholder.com/150/00FF00',
-      'https://via.placeholder.com/150/FFFF00'
-    ],
-    createdAt: '2025-01-15T08:30:00.000Z'
-  },
-  {
-    _id: '2',
-    name: 'Denim Jeans',
-    description: 'Stylish slim fit jeans',
-    price: 49.99,
-    category: 'Clothing',
-    sizes: ['30', '32', '34', '36'],
-    stock: 15,
-    images: [
-      assets.p_img2_1,
-      'https://via.placeholder.com/150/222222',
-      'https://via.placeholder.com/150/333333',
-      'https://via.placeholder.com/150/444444'
-    ],
-    createdAt: '2025-02-01T10:15:00.000Z'
-  }
-];
-
-const ProductsListPage = () => {
+const ProductsListPage = ({ token }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -49,8 +14,22 @@ const ProductsListPage = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        await new Promise(resolve => setTimeout(resolve, 500));
-        setProducts(mockProducts);
+        console.log(token)
+        const res = await axios.get(
+          'http://localhost:3000/api/product/vendorlist',
+
+          {
+            headers: {
+              token,
+            },
+          }
+        );
+        console.log(res.data)
+        if (res.data.success) {
+          setProducts(res.data.products);
+        } else {
+          setError('Failed to load products');
+        }
         setLoading(false);
       } catch (err) {
         setError('Failed to fetch products');
@@ -58,11 +37,28 @@ const ProductsListPage = () => {
       }
     };
     fetchProducts();
-  }, []);
+  }, [token,setProducts]);
 
-  const removeProduct = (id) => {
-    if (window.confirm('Are you sure you want to remove this product?')) {
-      setProducts(products.filter(product => product._id !== id));
+
+  // ✅ Remove product using backend call
+  const removeProduct = async (id) => {
+    const confirm = window.confirm('Are you sure you want to remove this product?');
+    if (!confirm) return;
+
+    try {
+      const res = await axios.post('http://localhost:3000/api/product/delete', { id }, {
+        headers: {
+          token
+        }
+      });
+      if (res.data.success) {
+        setProducts(products.filter(product => product._id !== id));
+      } else {
+        alert('Failed to remove product: ' + res.data.message);
+      }
+    } catch (err) {
+      alert('Error removing product');
+      console.error(err);
     }
   };
 
@@ -122,14 +118,16 @@ const ProductsListPage = () => {
         <ul>
           {filteredProducts.map(product => (
             <li key={product._id} className="border-b py-4 flex items-start gap-4">
-              {/* Display Product Image */}
-              <img 
-                src={product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/150'}
-                alt={product.name} 
+              <img
+                src={
+                  product.images?.length && product.images[0]
+                    ? product.images[0]
+                    : 'https://via.placeholder.com/150'
+                }
+                alt={product.name}
                 className="w-24 h-24 object-cover rounded-md"
               />
 
-              {/* Product Info */}
               <div>
                 <h2 className="text-lg font-semibold">{product.name}</h2>
                 <p>{product.description}</p>
@@ -138,7 +136,6 @@ const ProductsListPage = () => {
                 <p className="text-sm text-gray-500">Added on: {formatDate(product.createdAt)}</p>
               </div>
 
-              {/* Remove Button */}
               <button
                 className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 ml-auto"
                 onClick={() => removeProduct(product._id)}

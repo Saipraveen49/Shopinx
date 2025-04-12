@@ -1,19 +1,20 @@
 import React from "react";
+import { assets } from "../assets/assets";
 
 const categories = [
-  { name: "Electronics", image: "https://source.unsplash.com/400x400/?electronics" },
-  { name: "Fashion", image: "https://source.unsplash.com/400x400/?fashion" },
-  { name: "Home Decor", image: "https://source.unsplash.com/400x400/?home-decor" },
-  { name: "Sports", image: "https://source.unsplash.com/400x400/?sports" },
-  { name: "Books", image: "https://source.unsplash.com/400x400/?books" },
-  { name: "Beauty", image: "https://source.unsplash.com/400x400/?beauty" },
+  { name: "Electronics", image: assets.electronics1 },
+  { name: "Fashion", image: assets.fashion2},
+  { name: "Home Decor", image: assets.decor },
+  { name: "Sports", image: assets.sports },
+  { name: "Books", image: assets.books },
+  { name: "Beauty", image: assets.beauty },
 ];
 
 const FeaturedCategories = () => {
   return (
     <div className="max-w-7xl mx-auto px-6 py-12">
-      <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-12">
-        🌟 Featured Categories 🌟
+      <h2 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-extrabold text-center text-gray-900 mb-6">
+      🌟 Featured Categories 🌟
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
         {categories.map((category, index) => (

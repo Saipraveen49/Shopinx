@@ -5,12 +5,16 @@ import userRouter from "./routes/userRouter.js";
 import cartRouter from "./routes/cartRouter.js";
 import productRouter from "./routes/productRoute.js";
 import connectCloudinary from './config/cloudinary.js'
+import cors from 'cors'
+import storeRouter from "./routes/storeRouter.js";
 dotenv.config();
 
 const port = process.env.PORT || 3000
 
 const app=express();
+app.use(cors());
 app.use(express.json())
+
 connectDb();
 connectCloudinary();
 app.get('/',(req,res)=>{
@@ -19,7 +23,7 @@ app.get('/',(req,res)=>{
 app.use('/api/user',userRouter)
 app.use('/api/cart',cartRouter);
 app.use('/api/product',productRouter);
-
+app.use('/api/store',storeRouter)
 app.listen(port,()=>{
     console.log(`Server Running on localhost ${port}`);
 })

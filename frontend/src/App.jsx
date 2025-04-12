@@ -9,9 +9,12 @@ import AccessAccount from './pages/Accessaccount'
 import NearByStores from './pages/NearByStores'
 import StoreProducts from './pages/StoreProducts'
 import Product from './pages/Product'
+import { ToastContainer } from 'react-toastify';
+import ProductsPage from './pages/ProductsPags'
 const App = () => {
   return (
     <div>
+    <ToastContainer/>
       <Navbar/>
       <div>
       <Routes>
@@ -22,6 +25,7 @@ const App = () => {
         <Route path='/near-stores' element={<NearByStores/>} />
         <Route path='/store/:id' element={<StoreProducts/>} />
         <Route path='/product/:id' element={<Product/>} /> 
+        <Route path='/products' element={<ProductsPage/>} />
       </Routes>
       </div>
       

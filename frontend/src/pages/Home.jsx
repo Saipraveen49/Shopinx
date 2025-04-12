@@ -13,12 +13,14 @@ const Home = () => {
     <div>
       <Hero/>
       <CategoryIcons/>
-      <Advantage/>
       <NewArrivals/>
+      <PopularProducts/>
+      <Advantage/>
+      
       <LimitedTimeOffers/>
       <OffersBanner/>
       <FeaturedCategories/>
-      <PopularProducts/>
+      
     </div>
   )
 }

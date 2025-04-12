@@ -33,6 +33,20 @@ import google_icon from './google_icon.png'
 import github from './github.jpg'
 import quickview from './quickview.png'
 import wishlist from './wishlist.png'
+import mobiles from './mobiles.png'
+import hero1 from './hero1.jpg' 
+import hero2 from './hero2.jpg'
+import hero3 from './hero3.jpg'
+import watches from './watches.jpg'
+import shoes from './shoes.jpg'
+import electronics from './electronics.jpg'
+import fashion from './fashion.jpg'
+import decor from './decor.jpg'
+import beauty from './beauty.jpg'
+import sports from './sports.jpg'
+import fashion2 from './fashion2.jpg'
+import books from './books.jpeg'
+import electronics1 from './electronics1.jpg'
 export const assets ={
     logo,
     cart_icon,
@@ -47,12 +61,13 @@ export const assets ={
     twitter_icon,
     seller,
     buyer,
-    google_icon,
-    github,
-    quickview,wishlist,p_img1,p_img2_1,p_img2_2,p_img2_3,p_img2_4
+    google_icon,hero3,
+    github,hero2,sports,fashion2,books,electronics1,
+    quickview,wishlist,p_img1,p_img2_1,p_img2_2,p_img2_3,p_img2_4,
+    mobiles,hero1,watches,shoes,electronics,fashion,decor,beauty
 }
 
-export const products = [
+{/*export const products = [
     {
         _id: "aaaaa",
         name: "Women Round Neck Cotton Top",
@@ -233,4 +248,4 @@ export const products = [
         date: 1716627745448,
         bestseller: false
     },
-]
+]*/}

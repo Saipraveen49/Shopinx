@@ -16,7 +16,7 @@ const ProductItem = ({ id, name, image, price, oldPrice }) => {
 
                 <img
                     className="w-full h-48 md:h-56 lg:h-64 object-cover transition-transform duration-300 rounded-lg"
-                    src={image[0]}
+                    src={image}
                     alt={name}
                 />
 
@@ -56,7 +56,7 @@ const ProductItem = ({ id, name, image, price, oldPrice }) => {
             {/* Add to Cart Button */}
             <button 
                 className="bg-green-500 text-white font-semibold py-2 px-4 rounded-md mt-4 w-full hover:bg-green-600 transition"
-                onClick={() => addToCart(id, name, price, image[0])}
+                onClick={() => addToCart(id, name, price, image)}
             >
                 + Add
             </button>
