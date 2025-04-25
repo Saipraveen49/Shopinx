@@ -12,83 +12,7 @@ const ShopContextProvider = (props) => {
     const [products, setProducts] = useState([])
     const [uname,setUname]=useState("")
     const storeImage=assets.seller;
-    // const stores = [
-    //     {
-    //         id: 1,
-    //         name: "Fresh Mart",
-    //         address: "123 Main St, City",
-    //         distance: "1.2 km",
-    //         rating: 4.5,
-    //         phone: "+91 98765 43210",
-    //         openingHours: "9:00 AM - 9:00 PM",
-    //         isOpen: true,
-    //         categories: ["Groceries", "Fruits", "Dairy"],
-    //         offers: "10% off on fresh vegetables",
-    //         verified: true,
-    //         deliveryAvailable: true,
-    //         paymentMethods: ["Cash", "UPI", "Cards"],
-    //         images: assets.seller,
-    //         reviews: 149,
-    //     },
-    //     {
-    //         id: 2,
-    //         name: "Tech Store",
-    //         address: "45 Tech Road, City",
-    //         distance: "2.5 km",
-    //         rating: 4.7,
-    //         phone: "+91 99887 66554",
-    //         openingHours: "10:00 AM - 8:00 PM",
-    //         isOpen: false,
-    //         categories: ["Electronics", "Accessories"],
-    //         offers: "Buy 1 Get 1 Free on Accessories",
-    //         verified: false,
-    //         deliveryAvailable: false,
-    //         paymentMethods: ["Cash", "Cards"],
-    //         images: assets.seller,
-    //         reviews: 210,
-    //     },
-    // ];
-    const producs = [
-        {
-            _id: "aaaaa",
-            name: "Women Round Neck Cotton Top",
-            description: "A lightweight, knitted pullover shirt with a round neckline and short sleeves.",
-            price: 100,
-            image: [assets.p_img1],
-            category: "Women",
-            subCategory: "Topwear",
-            sizes: ["S", "M", "L"],
-            date: 1716634345448,
-            bestseller: false,
-            storeId: 1, // Linked to Fresh Fashion
-        },
-        {
-            _id: "bbbbb",
-            name: "Men's Casual Cotton Shirt",
-            description: "Comfortable and stylish cotton shirt perfect for casual outings.",
-            price: 120,
-            image: [assets.p_img1],
-            category: "Men",
-            subCategory: "Shirts",
-            sizes: ["M", "L", "XL"],
-            date: 1716634345448,
-            bestseller: true,
-            storeId: 1, // Linked to Fresh Fashion
-        },
-        {
-            _id: "ccccc",
-            name: "Women's Denim Jacket",
-            description: "Classic denim jacket for all-season wear.",
-            price: 200,
-            image: [assets.p_img1],
-            category: "Women",
-            subCategory: "Outerwear",
-            sizes: ["S", "M", "L", "XL"],
-            date: 1716634345448,
-            bestseller: true,
-            storeId: 2, // Linked to Trendy Outfits
-        },
-    ];
+    
     const [cart, setCart] = useState([]);
 
     const getCartCount = () => {
@@ -142,6 +66,29 @@ const ShopContextProvider = (props) => {
             }
         }
     };
+    const removeFromCart = async (itemId, size = "default") => {
+        try {
+            const response = await axios.post(`${backendUrl}/api/cart/remove`, { itemId, size }, {
+                headers: { token }
+            });
+            console.log(response);
+            if (response.data.success) {
+                toast.success(response.data.message);
+                let cartData = structuredClone(cart);
+                if (cartData[itemId] && cartData[itemId][size]) {
+                    delete cartData[itemId][size];
+                    if (Object.keys(cartData[itemId]).length === 0) {
+                        delete cartData[itemId];
+                    }
+                }
+                setCart({ ...cartData });
+            } else {
+                toast.error(response.data.message);
+            }
+        } catch (error) {
+            toast.error(error.message);
+        }
+    };
 
     const updateQuantity = async (itemId, size, quantity) => {
         const finalSize = size || "default";
@@ -181,9 +128,14 @@ const ShopContextProvider = (props) => {
     useEffect(() => {
         if (!token && localStorage.getItem('token')) {
             setToken(localStorage.getItem('token'))
-            getUserCart(localStorage.getItem('token'))
+
         }
     }, [])
+    useEffect(()=>{
+        if (!token && localStorage.getItem('token')) {
+            getUserCart(localStorage.getItem('token'))
+        }
+    },[removeFromCart])
     const [stores, setStores] = useState([])
     const getStores = async () => {
         try {
@@ -207,7 +159,8 @@ const ShopContextProvider = (props) => {
         products,
         rupees, stores,
         cart, setCart, addToCart, getCartCount, backendUrl, token, setToken,
-        navigate,updateQuantity,getUserCart,uname,setUname,getStores,storeImage
+        navigate,updateQuantity,getUserCart,uname,setUname,getStores,storeImage,
+        removeFromCart
 
     }
     return (
@@ -218,3 +171,82 @@ const ShopContextProvider = (props) => {
 }
 
 export default ShopContextProvider
+
+
+// const stores = [
+    //     {
+    //         id: 1,
+    //         name: "Fresh Mart",
+    //         address: "123 Main St, City",
+    //         distance: "1.2 km",
+    //         rating: 4.5,
+    //         phone: "+91 98765 43210",
+    //         openingHours: "9:00 AM - 9:00 PM",
+    //         isOpen: true,
+    //         categories: ["Groceries", "Fruits", "Dairy"],
+    //         offers: "10% off on fresh vegetables",
+    //         verified: true,
+    //         deliveryAvailable: true,
+    //         paymentMethods: ["Cash", "UPI", "Cards"],
+    //         images: assets.seller,
+    //         reviews: 149,
+    //     },
+    //     {
+    //         id: 2,
+    //         name: "Tech Store",
+    //         address: "45 Tech Road, City",
+    //         distance: "2.5 km",
+    //         rating: 4.7,
+    //         phone: "+91 99887 66554",
+    //         openingHours: "10:00 AM - 8:00 PM",
+    //         isOpen: false,
+    //         categories: ["Electronics", "Accessories"],
+    //         offers: "Buy 1 Get 1 Free on Accessories",
+    //         verified: false,
+    //         deliveryAvailable: false,
+    //         paymentMethods: ["Cash", "Cards"],
+    //         images: assets.seller,
+    //         reviews: 210,
+    //     },
+    // ];
+    // const producs = [
+    //     {
+    //         _id: "aaaaa",
+    //         name: "Women Round Neck Cotton Top",
+    //         description: "A lightweight, knitted pullover shirt with a round neckline and short sleeves.",
+    //         price: 100,
+    //         image: [assets.p_img1],
+    //         category: "Women",
+    //         subCategory: "Topwear",
+    //         sizes: ["S", "M", "L"],
+    //         date: 1716634345448,
+    //         bestseller: false,
+    //         storeId: 1, // Linked to Fresh Fashion
+    //     },
+    //     {
+    //         _id: "bbbbb",
+    //         name: "Men's Casual Cotton Shirt",
+    //         description: "Comfortable and stylish cotton shirt perfect for casual outings.",
+    //         price: 120,
+    //         image: [assets.p_img1],
+    //         category: "Men",
+    //         subCategory: "Shirts",
+    //         sizes: ["M", "L", "XL"],
+    //         date: 1716634345448,
+    //         bestseller: true,
+    //         storeId: 1, // Linked to Fresh Fashion
+    //     },
+    //     {
+    //         _id: "ccccc",
+    //         name: "Women's Denim Jacket",
+    //         description: "Classic denim jacket for all-season wear.",
+    //         price: 200,
+    //         image: [assets.p_img1],
+    //         category: "Women",
+    //         subCategory: "Outerwear",
+    //         sizes: ["S", "M", "L", "XL"],
+    //         date: 1716634345448,
+    //         bestseller: true,
+    //         storeId: 2, // Linked to Trendy Outfits
+    //     },
+    // ];

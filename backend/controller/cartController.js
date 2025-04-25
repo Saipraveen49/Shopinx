@@ -95,7 +95,8 @@ const removeFromCart = async (req, res) => {
                 }
 
                 await userModel.findByIdAndUpdate(userId, { cartData });
-                return res.status(200).json({ message: 'Item removed from cart successfully', cart: cartData });
+                return res.json({ success: true, message: 'Item removed from cart successfully' });
+
             }
         }
 
